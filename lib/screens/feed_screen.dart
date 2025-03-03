@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/tmdb_service.dart';
 import '../models/movie_model.dart';
-import 'detail_screen.dart'; // Importa el archivo correcto
+import 'detail_screen.dart';
 
 class FeedScreen extends StatelessWidget {
   @override
@@ -10,9 +10,56 @@ class FeedScreen extends StatelessWidget {
     final tmdbService = Provider.of<TMDbService>(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Películas Populares')),
+      appBar: AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 26.0, top: 10.0),
+          child: SizedBox(
+            width: 25.0,
+            height: 25.0,
+            child: IconButton(
+              icon: const Icon(Icons.menu, color: Colors.white),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+              style: IconButton.styleFrom(
+                backgroundColor: Colors.green,
+                shape: const CircleBorder(),
+                padding: EdgeInsets.zero,
+                minimumSize: Size.zero, // Establece el tamaño mínimo a cero
+                tapTargetSize:
+                    MaterialTapTargetSize.shrinkWrap, // Ajusta el área de toque
+              ),
+            ),
+          ),
+        ),
+        title: Center(
+          child: Text('Latest', style: TextStyle(fontWeight: FontWeight.bold)),
+        ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(color: Colors.blue),
+              child: Text(
+                'Menú',
+                style: TextStyle(color: Colors.white, fontSize: 24),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.circle, color: Colors.green),
+              title: Text('Opción 1'),
+              onTap: () {
+                // No hace nada
+              },
+            ),
+            // Puedes agregar más opciones aquí
+          ],
+        ),
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(25.0), // Margen alrededor del GridView
+        padding: const EdgeInsets.all(25.0),
         child: FutureBuilder<List<dynamic>>(
           future: tmdbService.getPopularMovies(),
           builder: (context, snapshot) {
@@ -24,11 +71,10 @@ class FeedScreen extends StatelessWidget {
               final movies = snapshot.data!;
               return GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, // Dos columnas
-                  crossAxisSpacing: 20.0, // Espacio entre columnas
-                  mainAxisSpacing: 20.0, // Espacio entre filas
-                  childAspectRatio:
-                      151 / 218, // Relación de aspecto (ancho/alto)
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 20.0,
+                  mainAxisSpacing: 20.0,
+                  childAspectRatio: 151 / 218,
                 ),
                 itemCount: movies.length,
                 itemBuilder: (context, index) {
@@ -53,7 +99,6 @@ class GridItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navegar a la pantalla de detalles de la película
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => DetailScreen(movie: movie)),
@@ -61,7 +106,7 @@ class GridItem extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8.0), // Esquinas redondeadas
+          borderRadius: BorderRadius.circular(8.0),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.2),
@@ -82,7 +127,8 @@ class GridItem extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(
+            Container(
+              color: Colors.transparent,
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
