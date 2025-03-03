@@ -14,7 +14,23 @@ class DetailScreen extends StatelessWidget {
     final tmdbService = Provider.of<TMDbService>(context);
 
     return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: Container(
+          margin: EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+            color: Colors.green,
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: IconButton(
+            icon: Icon(Icons.close, color: Colors.white),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ),
+      ),
       extendBodyBehindAppBar: true,
       body: FutureBuilder<Map<String, dynamic>>(
         future: tmdbService.getMovieDetails(movie.id),
@@ -83,12 +99,22 @@ class DetailScreen extends StatelessWidget {
                                     ),
                                   ),
                                   SizedBox(height: 8),
-                                  for (
-                                    var i = 0;
-                                    i < 3 && i < actors.length;
-                                    i++
-                                  )
-                                    ActorCard(actor: actors[i]),
+                                  Center(
+                                    // Centramos el Row
+                                    child: Wrap(
+                                      // Usamos Wrap para centrar y ajustar las tarjetas
+                                      alignment: WrapAlignment.center,
+                                      spacing: 8.0, // Espacio entre tarjetas
+                                      children: [
+                                        for (
+                                          var i = 0;
+                                          i < 3 && i < actors.length;
+                                          i++
+                                        )
+                                          ActorCard(actor: actors[i]),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               );
                             }
